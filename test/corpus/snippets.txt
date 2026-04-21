@@ -50,7 +50,8 @@ Snippet (without argument)
   (snippet_statement
     (snippet_start
       (block_start_tag)
-      (snippet_name))
+      (snippet_name)
+      (svelte_raw_text))
     (element
      (start_tag
        (tag_name))
@@ -127,11 +128,13 @@ Snippet (with nesting)
     (snippet_statement
       (snippet_start
         (block_start_tag)
-        (snippet_name))
+        (snippet_name)
+        (svelte_raw_text))
       (snippet_statement
         (snippet_start
           (block_start_tag)
-          (snippet_name))
+          (snippet_name)
+          (svelte_raw_text))
         (snippet_end
           (block_end_tag)))
       (comment)

@@ -338,16 +338,26 @@ static bool scan_raw_text(Scanner *scanner, TSLexer *lexer) {
     return true;
 }
 
-// Like `scan_svelte_raw_text`, but designed to operate inside the parentheses
-// of a `#snippet` definition. Consumes everything until just before the next
-// balanced parenthesis.
+// Like `scan_svelte_raw_text`, but designed to operate inside a `#snippet`
+// definition. Consumes the opening parenthesis, the arguments (including any
+// nested parentheses), and the closing parenthesis as a single token, so
+// that type annotations like `param: number` are parsed correctly by the
+// injected TypeScript grammar rather than being split across grammar literals
+// and the injection content.
 static bool scan_svelte_raw_text_snippet(TSLexer *lexer) {
     while (iswspace(lexer->lookahead)) {
         skip(lexer);
     }
+
+    // If there's no opening parenthesis, the snippet has no arguments.
+    if (lexer->lookahead != '(') {
+        return false;
+    }
+
     lexer->result_symbol = SVELTE_RAW_TEXT_SNIPPET_ARGUMENTS;
-    uint8_t paren_level = 0;
-    bool advanced_once = false;
+    advance(lexer); // consume '('
+    uint8_t paren_level = 1;
+
     while (!lexer->eof(lexer)) {
         switch (lexer->lookahead) {
             case '/':
@@ -374,12 +384,12 @@ static bool scan_svelte_raw_text_snippet(TSLexer *lexer) {
                 scan_javascript_template_string(lexer);
                 break;
             case ')':
-                if (paren_level == 0) {
-                    lexer->mark_end(lexer);
-                    return advanced_once;
-                }
                 advance(lexer);
                 paren_level--;
+                if (paren_level == 0) {
+                    lexer->mark_end(lexer);
+                    return true;
+                }
                 break;
             case '(':
                 advance(lexer);
@@ -389,7 +399,6 @@ static bool scan_svelte_raw_text_snippet(TSLexer *lexer) {
                 advance(lexer);
                 break;
         }
-        advanced_once = true;
     }
     return false;
 }

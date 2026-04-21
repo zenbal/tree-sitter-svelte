@@ -280,11 +280,9 @@ module.exports = grammar(HTML, {
       '{',
       alias($._snippet_start_tag, $.block_start_tag),
       alias(/[a-zA-Z$_][a-zA-Z0-9_]*/, $.snippet_name),
-      '(',
       optional(
         alias($.svelte_raw_text_snippet_arguments, $.svelte_raw_text),
       ),
-      ')',
       '}',
     ),
 
