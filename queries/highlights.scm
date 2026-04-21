@@ -8,6 +8,7 @@
   "html"
   "snippet"
   "render"
+  "attach"
 ] @keyword
 
 "const" @type.qualifier
