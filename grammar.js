@@ -33,6 +33,7 @@ module.exports = grammar(HTML, {
     $.svelte_raw_text,
     $.svelte_raw_text_each,
     $.svelte_raw_text_snippet_arguments,
+    $.js_comment,
     '@',
     '#',
     '/',
@@ -121,6 +122,34 @@ module.exports = grammar(HTML, {
         alias($.expression, $.attribute_name),
         $.attach_tag,
       ),
+    ),
+
+    start_tag: $ => seq(
+      '<',
+      alias($._start_tag_name, $.tag_name),
+      repeat(choice($.attribute, alias($.js_comment, $.comment))),
+      '>',
+    ),
+
+    script_start_tag: $ => seq(
+      '<',
+      alias($._script_start_tag_name, $.tag_name),
+      repeat(choice($.attribute, alias($.js_comment, $.comment))),
+      '>',
+    ),
+
+    style_start_tag: $ => seq(
+      '<',
+      alias($._style_start_tag_name, $.tag_name),
+      repeat(choice($.attribute, alias($.js_comment, $.comment))),
+      '>',
+    ),
+
+    self_closing_tag: $ => seq(
+      '<',
+      alias($._start_tag_name, $.tag_name),
+      repeat(choice($.attribute, alias($.js_comment, $.comment))),
+      '/>',
     ),
 
     if_statement: $ => seq(

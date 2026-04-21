@@ -1,0 +1,191 @@
+================================================================================
+Line comment in start tag
+================================================================================
+<div
+  // disabled
+  class="btn"
+></div>
+---
+
+(document
+  (element
+    (start_tag
+      (tag_name)
+      (comment)
+      (attribute
+        (attribute_name)
+        (quoted_attribute_value
+          (attribute_value))))
+    (end_tag
+      (tag_name))))
+
+================================================================================
+Block comment in start tag
+================================================================================
+<div
+  /* id="main" */
+  class="btn"
+></div>
+---
+
+(document
+  (element
+    (start_tag
+      (tag_name)
+      (comment)
+      (attribute
+        (attribute_name)
+        (quoted_attribute_value
+          (attribute_value))))
+    (end_tag
+      (tag_name))))
+
+================================================================================
+Line comment in self-closing tag
+================================================================================
+<Input
+  // class="mb-2"
+  id="greet-input"
+  bind:value={name}
+/>
+---
+
+(document
+  (element
+    (self_closing_tag
+      (tag_name)
+      (comment)
+      (attribute
+        (attribute_name)
+        (quoted_attribute_value
+          (attribute_value)))
+      (attribute
+        (attribute_name)
+        (expression
+          (svelte_raw_text))))))
+
+================================================================================
+Block comment in self-closing tag
+================================================================================
+<Input
+  /* id="greet" */
+  class="btn"
+/>
+---
+
+(document
+  (element
+    (self_closing_tag
+      (tag_name)
+      (comment)
+      (attribute
+        (attribute_name)
+        (quoted_attribute_value
+          (attribute_value))))))
+
+================================================================================
+Multiple comments between attributes
+================================================================================
+<Button
+  // comment before attr
+  class="primary"
+  /* comment in between */
+  disabled
+  // comment at end
+/>
+---
+
+(document
+  (element
+    (self_closing_tag
+      (tag_name)
+      (comment)
+      (attribute
+        (attribute_name)
+        (quoted_attribute_value
+          (attribute_value)))
+      (comment)
+      (attribute
+        (attribute_name))
+      (comment))))
+
+================================================================================
+Multi-line block comment in tag
+================================================================================
+<Input
+  /* multi-line
+     block comment */
+  id="test"
+/>
+---
+
+(document
+  (element
+    (self_closing_tag
+      (tag_name)
+      (comment)
+      (attribute
+        (attribute_name)
+        (quoted_attribute_value
+          (attribute_value))))))
+
+================================================================================
+Comment in script start tag
+================================================================================
+<script // comment
+  lang="ts">
+</script>
+---
+
+(document
+  (script_element
+    (start_tag
+      (tag_name)
+      (comment)
+      (attribute
+        (attribute_name)
+        (quoted_attribute_value
+          (attribute_value))))
+    (raw_text)
+    (end_tag
+      (tag_name))))
+
+================================================================================
+Comment in style start tag
+================================================================================
+<style /* comment */
+  scoped>
+</style>
+---
+
+(document
+  (style_element
+    (start_tag
+      (tag_name)
+      (comment)
+      (attribute
+        (attribute_name)))
+    (raw_text)
+    (end_tag
+      (tag_name))))
+
+================================================================================
+JS-style comments not parsed in text content
+================================================================================
+<p>This is // not a comment</p>
+<p>This is /* also not a comment */</p>
+---
+
+(document
+  (element
+    (start_tag
+      (tag_name))
+    (text)
+    (end_tag
+      (tag_name)))
+  (element
+    (start_tag
+      (tag_name))
+    (text)
+    (end_tag
+      (tag_name))))

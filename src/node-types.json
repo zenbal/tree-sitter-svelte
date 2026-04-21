@@ -394,6 +394,7 @@
   {
     "type": "document",
     "named": true,
+    "root": true,
     "fields": {},
     "children": {
       "multiple": true,
@@ -885,6 +886,10 @@
           "named": true
         },
         {
+          "type": "comment",
+          "named": true
+        },
+        {
           "type": "tag_name",
           "named": true
         }
@@ -962,6 +967,10 @@
       "types": [
         {
           "type": "attribute",
+          "named": true
+        },
+        {
+          "type": "comment",
           "named": true
         },
         {
@@ -1106,7 +1115,8 @@
   },
   {
     "type": "comment",
-    "named": true
+    "named": true,
+    "extra": true
   },
   {
     "type": "const",

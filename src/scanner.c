@@ -16,6 +16,7 @@ enum TokenType {
     SVELTE_RAW_TEXT,
     SVELTE_RAW_TEXT_EACH,
     SVELTE_RAW_TEXT_SNIPPET_ARGUMENTS,
+    JS_COMMENT,
     AT,
     HASH,
     SLASH,
@@ -664,6 +665,61 @@ static bool scan(Scanner *scanner, TSLexer *lexer, const bool *valid_symbols) {
             break;
 
         case '/':
+            // Check for JS comments (// or /* */)
+            if (valid_symbols[JS_COMMENT]) {
+                advance(lexer);
+                if (lexer->lookahead == '/') {
+                    // Line comment: scan to end of line
+                    while (lexer->lookahead) {
+                        switch (lexer->lookahead) {
+                            case '\n':
+                            case '\r':
+                                advance(lexer);
+                                lexer->result_symbol = JS_COMMENT;
+                                lexer->mark_end(lexer);
+                                return true;
+                            default:
+                                advance(lexer);
+                        }
+                    }
+                    lexer->result_symbol = JS_COMMENT;
+                    lexer->mark_end(lexer);
+                    return true;
+                } else if (lexer->lookahead == '*') {
+                    // Block comment: scan to */
+                    advance(lexer);
+                    while (lexer->lookahead) {
+                        switch (lexer->lookahead) {
+                            case '*':
+                                advance(lexer);
+                                if (lexer->lookahead == '/') {
+                                    advance(lexer);
+                                    lexer->result_symbol = JS_COMMENT;
+                                    lexer->mark_end(lexer);
+                                    return true;
+                                }
+                                break;
+                            default:
+                                advance(lexer);
+                        }
+                    }
+                    // Unterminated block comment at EOF
+                    lexer->result_symbol = JS_COMMENT;
+                    lexer->mark_end(lexer);
+                    return true;
+                } else if (lexer->lookahead == '>' && valid_symbols[SELF_CLOSING_TAG_DELIMITER]) {
+                    // This is /> self-closing delimiter
+                    advance(lexer);
+                    if (scanner->tags.size > 0) {
+                        pop_tag(scanner);
+                    }
+                    lexer->result_symbol = SELF_CLOSING_TAG_DELIMITER;
+                    lexer->mark_end(lexer);
+                    return true;
+                }
+                // Not a comment or self-closing tag
+                return false;
+            }
             if (valid_symbols[SELF_CLOSING_TAG_DELIMITER]) {
                 return scan_self_closing_tag_delimiter(scanner, lexer);
             }
