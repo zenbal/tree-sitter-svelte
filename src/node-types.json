@@ -288,7 +288,7 @@
     "fields": {
       "tag": {
         "multiple": false,
-        "required": true,
+        "required": false,
         "types": [
           {
             "type": "catch",
@@ -296,10 +296,6 @@
           },
           {
             "type": "else",
-            "named": false
-          },
-          {
-            "type": "else if",
             "named": false
           },
           {
@@ -1128,10 +1124,6 @@
   },
   {
     "type": "else",
-    "named": false
-  },
-  {
-    "type": "else if",
     "named": false
   },
   {

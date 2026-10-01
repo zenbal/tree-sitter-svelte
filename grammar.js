@@ -168,7 +168,11 @@ module.exports = grammar(HTML, {
       '}',
     ),
 
-    _else_if_tag: _ => tag(':', 'else if'),
+    _else_if_tag: _ => seq(
+      ':',
+      token.immediate('else'),
+      'if',
+    ),
     else_if_start: $ => seq(
       '{',
       alias($._else_if_tag, $.block_tag),

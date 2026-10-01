@@ -703,15 +703,15 @@
           "value": ":"
         },
         {
-          "type": "FIELD",
-          "name": "tag",
+          "type": "IMMEDIATE_TOKEN",
           "content": {
-            "type": "IMMEDIATE_TOKEN",
-            "content": {
-              "type": "STRING",
-              "value": "else if"
-            }
+            "type": "STRING",
+            "value": "else"
           }
+        },
+        {
+          "type": "STRING",
+          "value": "if"
         }
       ]
     },
